@@ -1,0 +1,124 @@
+.responsive-container{
+    color:black;
+    display: grid;
+    gap:10px;
+    padding:20px;
+    background-color: black;
+    grid-template-columns: repeat(1, 1fr);
+}
+
+@media (max-width: 650px){
+    .responsive-container {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}   
+
+
+.responsive-container .top{
+
+    display:flex; flex-flow:row nowrap; justify-content: space-between;
+    padding:20px;
+}
+.responsive-container .top .button{
+    width:60px;
+    padding:20px;
+}
+.responsive-container .top .gnb a{
+    color:white;
+    text-align: right;  
+    padding:10px 10px; margin:0;
+}
+
+.responsive-container .page{
+ 
+    margin:0;
+    padding:20px;
+    display:flex; flex-flow:row nowrap; justify-content: space-between;
+}
+
+.responsive-container .page p{
+    background-color: black; color:white;
+    width:70%;
+    padding:20px;
+    text-align:center;
+    margin:0;
+
+}
+
+.responsive-container .page a{
+    color:white;
+    width:30%;
+    padding:20px;
+    text-align:center;
+    margin:0;
+}
+
+.responsive-container .project-container{
+    width:800px;
+    gap:10px; margin:0 auto;
+    padding:20px; display:flex; flex-direction:column;  
+}
+
+.project-card{
+    background-color: rgb(46, 46, 46); border-radius:15px; position:relative;
+    display:flex; justify-content: space-between; align-items: center;
+    padding:20px; width:700px; height:auto;
+    transition: transform 0.3s; cursor:pointer;
+}
+.project-card:hover{
+    transform:translateY(-2px);
+}
+.project-noimage{flex-direction: column;}
+
+
+
+.project-card .project-image{
+    width:20%; height: 100px; 
+    display:flex; align-items: center; justify-content: center;
+}
+.project-image img{
+    width:100%; height:auto;
+}
+img:hover{
+    transform: scale(1.05);
+    transition: transform 0.3s;
+}
+
+.project-top{
+    position:absolute; top:0; left:30%; margin:0; 
+    display:flex; align-items: center; justify-content: space-between; 
+    width:70%; height:70px; padding:0;
+}
+.hamburger{
+    width:40px;  height:22px; margin: 0;
+    cursor:pointer; background: none; border:none;
+    flex-direction: column;display:flex; justify-content:space-between;
+}
+.hamburger span{
+    width:100%; height:3px; 
+    background:#888; 
+    border-radius:2px;
+    transition:0.25s;
+}
+.hamburger:hover span:nth-child(1){width:60%; align-self:flex-start;}
+.hamburger:hover span:nth-child(3){width:60%; align-self:flex-end;}
+
+
+.project-info{
+    display: flex;justify-content: center;
+    flex-direction: column;flex: 1;
+}
+.project_name{
+    font-size:1.5rem; font-weight:700; margin:0; padding:0; color:#fff;
+}
+.project-description{
+    color:#ddd; margin:10px 0; padding:0; font-size:0.9rem; width:70%;
+}
+.members{
+    display:flex; flex-flow:row nowrap; gap:10px; margin-top:10px;
+    }
+.member{background: grey;}
+.leader{color:#000; background: #4c4ae6;}
+.member, .leader{
+    padding:5px 10px; font-size:0.9rem; border-radius:15px;
+}
