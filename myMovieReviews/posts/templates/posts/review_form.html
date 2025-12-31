@@ -1,0 +1,74 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>{% if mode == 'update' %}리뷰 수정{% else %}리뷰 작성{% endif %}</title>
+    <link rel="stylesheet" href="{% static 'posts/reset.css' %}">
+    <link rel="stylesheet" href="{% static 'posts/create.css' %}">
+
+
+</head>
+<body>
+    <h1 class = "logo">
+        <a href="{% url 'review_list' %}">my Movie reviews</a>
+    </h1>
+    
+    <div class="content">
+        <div class="header">
+            <h1 class="header_title">{% if mode == 'update' %}리뷰 수정{% else %}리뷰 작성{% endif %}</h1>
+            <!--아이콘 추가?-->
+        </div>
+
+        <div class="container_content">
+            
+
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="form_row">
+                    <div class="input_name">영화 제목</div>
+                    <input name="title" value="{{ review.title|default:'' }}">
+                </div>
+                <div class="form_row form_row_text">
+                    <p class="input_name">개봉 년도</p>
+                    <input name="year" value="{{ review.year|default:'' }}">
+                    <span class="placeholder">년</span>
+                </div>
+                <div class="form_row">
+                    <p class="input_name">장르</p>
+                    <input name="genre" value="{{ review.genre|default:'' }}">
+                </div>
+                <div class="form_row form_row_text">
+                    <p class="input_name">별점</p>
+                    <input name="rating" step = "0.1" value="{{ review.rating|default:'' }}">
+                    <span class = "placeholder">/ 5.0</span>
+                    
+                </div>
+                <div class="form_row">
+                    <p class="input_name">감독</p>
+                    <input name="director" value="{{ review.director|default:'' }}">
+                </div>
+                <div class="form_row">
+                    <p class="input_name">주연</p>
+                    <input name="actor" value="{{ review.actor|default:'' }}">
+                </div>
+                <div class="form_row form_row_text">
+                    <p class="input_name">러닝타임(분)</p>
+                    <input name="running_time" value="{{ review.running_time|default:'' }}">
+                    <span class = "placeholder"> 분</span>
+                </div>
+                <div class="form_row textarea_row">
+                    <p class="input_name">리뷰 내용</p>
+                    <textarea name="content" rows="6" cols="50">{{ review.content|default:'' }}</textarea>
+                </div>
+        
+                <div class="button_box">
+                    <button type="submit" class= "save_btn">저장</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

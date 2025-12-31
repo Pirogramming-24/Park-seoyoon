@@ -1,0 +1,83 @@
+body{
+    background-color: #e7e7e7;
+    
+}
+
+.logo{ /*맨 위에 잇는 거*/
+    text-align: center;
+    padding:20px 0;
+    margin:30px;
+    border-radius: 10px;
+    border-bottom:1px solid#6d6c6c;
+    
+}
+.logo a{
+    text-decoration: none;
+    color: #2e2e2e;
+    font-size: large;
+    font-weight: 800;
+    
+
+}
+
+.content{
+    background: #f5f6f8;
+    border: 1px solid #6c6c6c;
+    border-radius: 10px; width:70%;
+    padding:10px 20px ; margin:20px auto;
+    padding-bottom: 20px;
+        box-shadow: 0 0px 18px rgba(0,0,0,0.2);
+
+}
+
+.header{
+    border-bottom: 1px solid #6c6c6c;
+    box-shadow: 3px gray; /*이거 어케하누?*/
+    padding: 10px 3px;
+    margin-bottom: 20px;
+    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    color: #2e2e2e;
+}
+.header a{
+    text-decoration: none;
+    color: #2e2e2e;
+}
+
+.list_grid{
+    list-style: none;
+    display: grid; grid-template-columns: repeat(3, 1fr); 
+    gap:20px;
+}
+
+.review_card{
+    background-color: #f5f6f8;
+    border: 1px solid #6c6c6c;
+    border-radius: 10px;
+    padding:15px;
+    margin:0;
+    transition: top .1s,
+                left .1s;
+    z-index: 10;
+}
+.review_card a{text-decoration: none; color:inherit;}
+
+.review_card h3{
+    font-weight: bold;
+    border-bottom: 1px solid #6c6c6c;
+    padding-bottom: 7px;
+    margin-bottom: 7px;
+
+}
+.review_card p{
+    font-size: 11px;
+    color:black;
+    padding:0 3px;
+    
+}
+.review_card p span{
+    font-size: 16px;
+    padding: 0 3px;
+
+}
