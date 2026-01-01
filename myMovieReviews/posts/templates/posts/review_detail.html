@@ -1,0 +1,65 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>{{ review.title }}</title>
+    <link rel="stylesheet" href="{% static 'posts/reset.css' %}">
+    <link rel="stylesheet" href="{% static 'posts/detail.css' %}">
+</head>
+<body>
+    <div class="logo">
+        <a href="{% url 'review_list' %}">my Movie reviews</a>
+    </div>
+
+    <div class="content">
+        <div class="header">
+            <h1 class = "title">리뷰 조회</h1>
+            <!--전 페이지로 돌아가는 거나 양 옆 아이들로 들어가고 싶은데 -->
+        </div>
+
+        <div class="container_content">
+            <div class="form_row">
+                <div class="input_name">영화 제목</div>
+                <p>{{ review.title }}</p>
+            </div>
+            <div class="form_row">
+                <div class="input_name">감독</div>
+                <p>{{ review.director }}</p>
+            </div>
+            <div class="form_row">
+                <div class="input_name">개봉 년도</div>
+                <p>{{ review.year }} 년</p>
+            </div>
+            <div class="form_row">
+                <div class="input_name">장르</div>
+                <p>{{ review.genre }}</p>
+            </div>
+            <div class="form_row">
+                <div class="input_name">별점</div>
+                <p>{{ review.rating }} / 5.0</p>
+            </div>
+            <div class="form_row">
+                <div class="input_name">러닝타임</div>
+                <p>{{ review.running_time }} 분</p>
+            </div>
+            
+            <div class="form_row">
+                <div class="input_name">리뷰 내용</div>
+                <p>{{ review.content }}</p>
+            </div>
+            
+            <div class="btn_box">
+                <a href="{% url 'review_update' review.pk %}" class = "edit_btn">수정</a>
+                <a href="{% url 'review_delete' review.pk %}" class = "delete_btn">삭제</a>
+            </div>
+        
+        </div>
+
+
+    </div>
+    
+</body>
+</html>
+

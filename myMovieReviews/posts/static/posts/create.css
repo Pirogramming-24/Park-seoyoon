@@ -1,0 +1,90 @@
+body{
+    background-color: #e7e7e7;
+}
+
+
+.logo{ /*맨 위에 잇는 거*/
+    text-align: center;
+    padding:20px 0;
+    margin:30px;
+    border-bottom:1px solid#6d6c6c;
+}
+.logo a{
+    text-decoration: none;
+    color: #2e2e2e;
+    font-size: large;
+    font-weight: 800;
+
+}
+
+.content{
+    background: #f5f6f8;
+    border: 1px solid #6c6c6c;
+    border-radius: 10px; width:70%;
+    padding:10px 20px ; margin:20px auto;
+    box-shadow: 0 0px 18px rgba(0,0,0,0.2);
+    padding-bottom: 20px;
+
+}
+
+.header{
+    border-bottom: 1px solid #6c6c6c;
+    box-shadow: 3px gray; /*이거 어케하누?*/
+    padding: 10px 3px;
+    margin-bottom: 20px;
+    text-align: center;
+    
+    color: #2e2e2e;
+}
+
+.container_content{
+    width: 100%;
+    display: flex; justify-self: center;
+    padding:10px 20px;
+}
+form{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.form_row{
+    width: 100%; margin:10px;
+    display: flex; 
+    align-items: center; 
+    margin-bottom: 10px;
+}
+.input_name{
+    width: 30%;
+    color:#444444;
+    font-size: 15px;
+    text-align: right;
+    margin-right: 30px;
+
+}
+.form_row input{
+    width: 50%;
+    padding: 5px;
+}
+.form_row_text {
+    position:relative;
+}
+
+.placeholder{
+    position:absolute;
+    right: 17% ;
+    color:#444444;
+    pointer-events: none;
+}
+.textarea_row{
+    align-items: flex-start;
+}
+.textarea_row textarea{
+    width: 50%;
+}
+
+.save_btn{
+    border-radius: 30px;
+    padding: 8px 30px;
+    margin: 0 10px; margin-top: 10px;
+}
