@@ -1,0 +1,89 @@
+body{
+  margin: 0;              /* 기본 여백 제거(중요) */
+    background-color: beige;
+}
+/* sidebar + content를 옆으로 붙이기 */
+.layout{
+  display: flex;           /* ✅ 이게 핵심 */
+  padding-top: 130px;      /* navbar 높이만큼 */
+    min-height: 100vh;
+    background-color: burlywood;
+}
+
+/* 상단 고정 네비바 */
+.navbar{
+    background-color: cadetblue;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 130px;
+
+    border-bottom: 1px solid black;
+    z-index: 1000;
+    display: flex;
+    text-align: center;
+}
+.logo{
+    padding: 0 60px;
+    background-image: url(https://www.freepnglogos.com/uploads/google-logo-png/google-logo-png-suite-everything-you-need-know-about-google-newest-0.png);
+    background-size: 130px 130px;
+    width: 14px; 
+    height: 100%; 
+    
+}
+.a_box{
+
+}
+.navbar a{
+    text-decoration:none ;
+    color:inherit;
+    padding: 30px;
+    
+}
+
+
+.sidebar{
+    background-color: chocolate;
+    flex: 0 0 100px;
+    width: 7%;
+    border: 1px solid black;
+    padding: 10px;
+    margin: 30px 30px;
+    margin-top: 50px;
+    border-radius: 10px;
+
+    position: sticky;
+  top: 130px;              /* ✅ navbar 아래에서 sticky 시작 */
+  height: calc(100vh - 100px); /* ✅ 화면 꽉 차게 */
+}
+
+.sidebar-idea, .sidebar-devtool{
+    background-color:aqua;
+    margin-bottom: 30px;
+}
+.sidebar-idea, .sidebar-devtool{
+    list-style: none;  
+}
+.sidebar-idea li, .sidebar-devtool li{
+    padding-left: 10px;
+}
+.sidebar-idea a, .sidebar-devtool a{
+    text-decoration: none; color: inherit;
+    font-size: 10px;
+}
+
+
+
+/* content는 남은 영역 전부 차지 */
+.content{
+    background-color: cornflowerblue;
+    flex: 1; 
+    min-width: 0;                /* ✅ 남은 폭 전부 */
+    padding: 20px;
+}
+.itembox{
+    background-color: darkgreen;
+    margin: 20px;
+}
+
+

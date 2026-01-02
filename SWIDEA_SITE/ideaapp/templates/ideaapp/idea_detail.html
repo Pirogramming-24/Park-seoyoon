@@ -1,0 +1,33 @@
+{% extends "ideaapp/base.html" %}
+
+{% block title %} {{ idea.title }} {% endblock %}
+
+{% block itembox %}
+
+
+<h1>{{ idea.title }}</h1>
+
+{% if idea.image %}
+  <img src="{{ idea.image.url }}" style="width:300px;">
+{% endif %}
+
+<p>{{ idea.content }}</p>
+<p>interest: {{ idea.interest }}</p>
+
+<p>
+  devtool:
+  <a href="{% url 'ideaapp:devtool_detail' idea.devtool.pk %}">
+    {{ idea.devtool.name }}
+  </a>
+</p>
+
+<hr>
+
+<a href="{% url 'ideaapp:idea_list' %}">목록</a>
+<a href="{% url 'ideaapp:idea_edit' idea.pk %}">수정</a>
+
+<form action="{% url 'ideaapp:idea_delete' idea.pk %}" method="post" style="display:inline;">
+  {% csrf_token %}
+  <button type="submit">삭제</button>
+</form>
+{% endblock %}

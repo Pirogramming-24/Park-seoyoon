@@ -1,0 +1,150 @@
+{% extends "ideaapp/base.html" %}
+
+{% block title %}아이디어 관리{% endblock %}
+
+{% block itembox %} <!--내용 시작. -->
+
+
+
+<h1>아이디어 관리</h1>
+
+<form method="get">
+  <select name="sort" onchange="this.form.submit()">
+    <option value="latest" {% if sort == "latest" %}selected{% endif %}>최신순</option>
+    <option value="oldest" {% if sort == "oldest" %}selected{% endif %}>등록순</option>
+    <option value="name" {% if sort == "name" %}selected{% endif %}>이름순</option>
+    <option value="star" {% if sort == "star" %}selected{% endif %}>찜하기순</option>
+  </select>
+</form>
+
+
+<ul class="idea-grid">
+  {% for idea in ideas %}
+    <li class="idea-card" data-idea-id="{{ idea.pk }}">
+      <div class="thumb">
+        {% if idea.image %}
+          <img src="{{ idea.image.url }}" alt="thumb">
+        {% endif %}
+
+        <!-- ⭐ 찜 버튼: 썸네일 위 -->
+        <button
+          type="button"
+          class="star-btn"
+          data-starred="{% if idea.is_starred %}1{% else %}0{% endif %}">
+          <span class="star-icon">{% if idea.is_starred %}★{% else %}☆{% endif %}</span>
+        </button>
+      </div>
+
+      <div class="meta">
+        <a href="{% url 'ideaapp:idea_detail' idea.pk %}">
+          <strong>{{ idea.title }}</strong>
+          </a>
+
+        <div class="row">
+          <span>찜: <span class="star-count">{{ idea.star_count }}</span></span>
+        </div>
+
+        <div class="row">
+          <span>interest: <span class="interest-value">{{ idea.interest }}</span></span>
+
+          <!-- ➕➖ 관심도 버튼 -->
+          <button type="button" class="interest-btn" data-action="dec">-</button>
+          <button type="button" class="interest-btn" data-action="inc">+</button>
+        </div>
+
+        <div class="row">
+          devtool:
+          <a href="{% url 'ideaapp:devtool_detail' idea.devtool.pk %}">
+            {{ idea.devtool.name }}
+          </a>
+        </div>
+      </div>
+    </li>
+  {% empty %}
+    <li>아이디어가 없습니다.</li>
+  {% endfor %}
+</ul>
+
+<style>
+  .idea-grid{ list-style:none; padding:0; margin:0; display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:16px; }
+  .idea-card{ background:#fff; padding:12px; border-radius:12px; }
+  .thumb{ position:relative; }
+  .thumb img{ width:100%; height:180px; object-fit:cover; border-radius:10px; display:block; }
+  .star-btn{
+    position:absolute; top:8px; right:8px;
+    border:none; background:rgba(255,255,255,0.85);
+    border-radius:999px; padding:6px 10px; cursor:pointer;
+    font-size:18px;
+  }
+  .meta{ margin-top:10px; }
+  .row{ margin-top:6px; display:flex; gap:8px; align-items:center; }
+  .interest-btn{ width:28px; height:28px; cursor:pointer; }
+</style>
+
+<script>
+  // CSRF 토큰 가져오기 (Django 기본)
+  function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+  }
+  const csrftoken = getCookie('csrftoken');
+
+  // 이벤트 위임: 리스트 전체에서 클릭 잡기
+  document.addEventListener("click", async (e) => {
+    // ⭐ 찜 토글
+    const starBtn = e.target.closest(".star-btn");
+    if (starBtn) {
+      const card = starBtn.closest(".idea-card");
+      const ideaId = card.dataset.ideaId;
+
+      const res = await fetch(`/ideas/${ideaId}/toggle_star/`, {
+        method: "POST",
+        headers: {
+          "X-CSRFToken": csrftoken,
+        },
+      });
+
+      if (res.status === 403) {
+        alert("로그인이 필요해!");
+        return;
+      }
+
+      const data = await res.json();
+
+      // UI 업데이트
+      const icon = starBtn.querySelector(".star-icon");
+      starBtn.dataset.starred = data.starred ? "1" : "0";
+      icon.textContent = data.starred ? "★" : "☆";
+      card.querySelector(".star-count").textContent = data.star_count;
+      return;
+    }
+
+    // ➕➖ 관심도 변경
+    const interestBtn = e.target.closest(".interest-btn");
+    if (interestBtn) {
+      const action = interestBtn.dataset.action;
+      const card = interestBtn.closest(".idea-card");
+      const ideaId = card.dataset.ideaId;
+
+      const res = await fetch(`/ideas/${ideaId}/interest/${action}/`, {
+        method: "POST",
+        headers: {
+          "X-CSRFToken": csrftoken,
+        },
+      });
+
+      if (res.status === 403) {
+        alert("로그인이 필요해!");
+        return;
+      }
+
+      const data = await res.json();
+      card.querySelector(".interest-value").textContent = data.interest;
+      return;
+    }
+  });
+</script>
+
+
+{% endblock %}

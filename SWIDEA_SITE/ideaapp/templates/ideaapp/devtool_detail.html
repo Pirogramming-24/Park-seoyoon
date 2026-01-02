@@ -1,0 +1,34 @@
+{% extends "ideaapp/base.html" %}
+
+{% block title %}개발툴 상세페이지{% endblock %}
+
+{% block itembox %}
+
+<h1>{{ devtool.name }}</h1>
+<p>kind: {{ devtool.kind }}</p>
+<p>{{ devtool.content }}</p>
+
+<h3>이 개발툴을 사용하는 아이디어</h3>
+
+<ul>
+  {% for idea in ideas %}
+    <li>
+      <a href="{% url 'ideaapp:idea_detail' idea.pk %}">
+        {{ idea.title }}
+      </a>
+    </li>
+  {% empty %}
+    <li>아직 없습니다.</li>
+  {% endfor %}
+</ul>
+
+<hr>
+
+<a href="{% url 'ideaapp:devtool_list' %}">목록</a>
+<a href="{% url 'ideaapp:devtool_edit' devtool.pk %}">수정</a>
+
+<form action="{% url 'ideaapp:devtool_delete' devtool.pk %}" method="post" style="display:inline;">
+  {% csrf_token %}
+  <button type="submit">삭제</button>
+</form>
+{% endblock %}

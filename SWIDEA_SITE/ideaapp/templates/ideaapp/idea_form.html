@@ -1,0 +1,16 @@
+{% extends "ideaapp/base.html" %}
+
+{% block title %}아이디어 {% if form.instance.pk %}수정{% else %}등록{% endif %}{% endblock %}
+
+{% block itembox %}
+<h1>아이디어 {% if form.instance.pk %}수정{% else %}등록{% endif %}</h1>
+
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">저장</button>
+</form>
+
+
+
+{% endblock %}

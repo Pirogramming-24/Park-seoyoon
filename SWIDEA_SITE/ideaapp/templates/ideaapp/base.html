@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title%} base 에서 나오는 title{% endblock%}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        {% load static %}
+    <link rel="stylesheet" href="{% static 'ideaapp/reset.css' %}">
+    <link rel="stylesheet" href="{% static 'ideaapp/style.css' %}">
+</head>
+<body>
+    
+    <div class="layout"> <!--걍 전체 화면. 네비 사이드바 포함 -->
+
+        <nav class = "navbar"> <!--네비바-->
+            <div class="logo">
+                <a href="{% url 'ideaapp:idea_list' %}"></a>
+            </div>
+            <div class="a_box">
+                <a href="{% url 'ideaapp:idea_list' %}">아이디어 관리</a>
+                <a href="{% url 'ideaapp:idea_create' %}">아이디어 등록</a>
+                <a href="{% url 'ideaapp:devtool_list' %}">개발툴 관리</a>
+                <a href="{% url 'ideaapp:devtool_create' %}">개발툴 등록</a>
+            </div>
+        </nav>
+        <aside class="sidebar"><!--사이드바-->
+            <ul class="sidebar-devtool">
+                <p class="sidebar-title">
+                    아이디어    
+                </p>
+                {% for idea in sidebar_ideas %}
+                <li>
+                    <a href="{% url 'ideaapp:idea_detail' idea.pk %}">{{ idea.title }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+
+
+            <ul class="sidebar-devtool">
+                <p class="sidebar-title">
+                    개발툴
+                </p>
+                {% for d in sidebar_devtools %}
+                <li> 
+                    <a href="{% url 'ideaapp:devtool_detail' d.pk %}">{{ d.name }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+                
+        </aside>
+        <main class="content"> <!--블루 -->
+            <div class="itembox"> <!--초록색-->
+                {% block itembox %}base itembox  {% endblock %}
+            </div>
+        </main>
+
+
+
+
+
+
+
+    </div>
+
+
+
+
+
+    
+</body>
+</html>
