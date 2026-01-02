@@ -1,34 +1,41 @@
 {% extends "ideaapp/base.html" %}
+{% load static %}
 
+{%block add_css %}
+    <link rel="stylesheet" href="{% static 'ideaapp/devtool_detail.css' %}">
+{% endblock %}
 {% block title %}개발툴 상세페이지{% endblock %}
 
 {% block itembox %}
 
-<h1>{{ devtool.name }}</h1>
-<p>kind: {{ devtool.kind }}</p>
-<p>{{ devtool.content }}</p>
+<div class="container">
 
-<h3>이 개발툴을 사용하는 아이디어</h3>
+  <h1 class="title">{{ devtool.name }}</h1>
+  <p class = "kind">{{ devtool.kind }}</p>
+<p class = "devtool_content">{{ devtool.content }}</p>
 
-<ul>
+<h3 ><i class="bi bi-chevron-down"></i>이 개발툴을 사용하는 아이디어</h3>
+
+<ul class = "box">
   {% for idea in ideas %}
-    <li>
-      <a href="{% url 'ideaapp:idea_detail' idea.pk %}">
-        {{ idea.title }}
-      </a>
-    </li>
+  <li >
+    <a href="{% url 'ideaapp:idea_detail' idea.pk %}">
+      {{ idea.title }}
+    </a>
+  </li>
   {% empty %}
-    <li>아직 없습니다.</li>
+  <li>아직 없습니다.</li>
   {% endfor %}
 </ul>
 
 <hr>
 
-<a href="{% url 'ideaapp:devtool_list' %}">목록</a>
-<a href="{% url 'ideaapp:devtool_edit' devtool.pk %}">수정</a>
+<a href="{% url 'ideaapp:devtool_list' %}" class = "btn"> 목록</a>
+<a href="{% url 'ideaapp:devtool_edit' devtool.pk %}" class = "btn"> 수정</a>
 
 <form action="{% url 'ideaapp:devtool_delete' devtool.pk %}" method="post" style="display:inline;">
   {% csrf_token %}
-  <button type="submit">삭제</button>
+  <button type="submit" class = "delete-btn">삭제</button>
 </form>
+</div>
 {% endblock %}

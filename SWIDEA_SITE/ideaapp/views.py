@@ -5,6 +5,8 @@ from .forms import IdeaForm, DevToolForm
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
+
 
 
 def idea_list(request):
@@ -34,11 +36,34 @@ def idea_list(request):
     else:
         ideas = ideas.order_by("-created_at")
 
-    return render(request, "ideaapp/idea_list.html", {"ideas": ideas, "sort": sort})
+    paginator = Paginator(ideas, 4)
+    page_number = request.GET.get("page")  # ?page=2
+    page_obj = paginator.get_page(page_number)
+
+    return render(
+        request,
+        "ideaapp/idea_list.html",
+        {
+            "sort": sort,
+            "page_obj": page_obj,   # ✅ 템플릿은 이걸로 사용
+            "ideas": page_obj.object_list,  # 기존 코드 호환용(있어도 되고 없어도 됨)
+        },
+    )
+
 
 def idea_detail(request, pk):
-    idea = get_object_or_404(Idea, pk=pk)
-    return render(request, "ideaapp/idea_detail.html", {"idea": idea})
+    idea = get_object_or_404(
+        Idea.objects.select_related("devtool").annotate(star_count=Count("stars")),
+        pk=pk)
+    is_starred = False
+    if request.user.is_authenticated:
+        is_starred = IdeaStar.objects.filter(user=request.user, idea=idea).exists()
+
+    return render(
+        request,
+        "ideaapp/idea_detail.html",
+        {"idea": idea, "is_starred": is_starred}
+    )
 
 
 def idea_create(request):
@@ -90,16 +115,17 @@ def toggle_star(request, pk):
 @login_required
 @require_POST
 def update_interest(request, pk, action):
-    idea = get_object_or_404
+    idea_obj = get_object_or_404(Idea, pk=pk)
+
     if action == "inc":
-        idea.interest +=1
+        idea_obj.interest += 1
     elif action == "dec":
-        idea.interest = max(0, idea.interest -1)
-    else: 
-        return JsonResponse({"error": "invalid action"}, status = 400)
-    
-    idea.save(update_fields =["interests"])
-    return JsonResponse({"interes": idea.interest})
+        idea_obj.interest = max(0, idea_obj.interest - 1)
+    else:
+        return JsonResponse({"error": "invalid action"}, status=400)
+
+    idea_obj.save(update_fields=["interest"])
+    return JsonResponse({"interest": idea_obj.interest})
 
 
 

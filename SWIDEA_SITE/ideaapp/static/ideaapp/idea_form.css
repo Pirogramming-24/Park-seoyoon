@@ -1,0 +1,22 @@
+
+.idea_form{
+    background-color: #1e1e1e;
+}
+
+.box_form{
+    background-color: #2d2d2d;
+    margin: 30px 190px;
+    margin-left: 37px;
+    width:600px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    padding:30px;
+    padding-bottom: 20px;
+
+}
+
+.save_btn{
+    margin:30px;
+    background: transparent;
+    margin-left: 530px;
+    margin-top:0 ;
+}

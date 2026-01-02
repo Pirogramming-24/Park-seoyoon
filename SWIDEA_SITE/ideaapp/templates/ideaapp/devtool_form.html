@@ -1,15 +1,22 @@
 {% extends "ideaapp/base.html" %}
-
+{% load static %}
+{%block add_css %}
+    <link rel="stylesheet" href="{% static 'ideaapp/idea_form.css' %}">
+    <link rel="stylesheet" href="{% static 'ideaapp/devtool_form.css' %}">
+{% endblock %}
 {% block title %} {% if mode == 'create' %}개발툴 등록{% else %}개발툴 수정{% endif %} {% endblock %}
 
 {% block itembox %}
-<h1>개발툴 {% if form.instance.pk %}수정{% else %}등록{% endif %}</h1>
 
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">저장</button>
-</form>
 
+
+
+<div class="box_form">
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class = "save_btn" >저장</button>
+  </form>
+</div>
 
 {% endblock %}
