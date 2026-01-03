@@ -1,0 +1,53 @@
+.container{
+    background-color: #2d2d2d;
+    color:#cccccc;
+    padding:30px;
+    padding-top:0;
+    position: relative;
+    width:60%;
+}
+h1{
+    color:#aadafa;
+    font-size: larger; font-weight: 800;
+    padding:30px 0;
+}
+.image{
+
+}
+.idea_content{
+    background-color: #3c3c3c;
+    margin: 20px 0;
+    margin-left: 10px;
+}
+.star-btn{
+    position:absolute;
+    top:3px; right:10px;
+    background: transparent;
+    cursor:pointer; border:none;
+    font-size:25px;
+    color:#cccccc;
+}
+.idea_interest,
+.jjim,
+.devtool_info{
+    color:#5b985d;
+}
+.devtool_info a{
+    text-decoration: none; color:inherit;
+}
+.interestcount,
+.jjim span,
+.devtool_info a{
+    color:#cccccc;
+    padding:0 20px;
+}
+.btn{
+        text-decoration: none; color:inherit;
+
+}
+.delete-btn{
+    background-color: transparent;
+    border: none;
+    color:#cccccc;
+    font-size:16px;
+}

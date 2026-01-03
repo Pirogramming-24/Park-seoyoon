@@ -1,0 +1,121 @@
+body{
+  margin: 0;              /* 기본 여백 제거(중요) */
+    background-color: beige;
+}
+/* sidebar + content를 옆으로 붙이기 */
+.layout{
+    display: flex;           /* ✅ 이게 핵심 */
+    padding-top: 70px;      /* navbar 높이만큼 */
+    min-height: 100vh;
+    background-color: #333333;
+}
+
+/* 상단 고정 네비바 */
+.navbar{
+    background-color: #3c3c3c;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 70px;
+
+    z-index: 1000;
+    display: flex;
+    text-align: center;
+}
+.logo{ /*로고 이미지*/
+    padding: 0px 60px;
+    background-image: url(https://code.visualstudio.com/assets/updates/1_35/logo-stable.png);
+    background-size: 50px 50px;
+    background-repeat: no-repeat;
+    width: 14px; 
+    height: 90%; 
+    margin-left: 230px;
+    margin-top:10px;
+
+    
+}
+.a_box{
+
+    margin:auto 30px;
+    margin-left: 36px;
+    margin-top: 35px ; margin-bottom: 0;
+    background-color:#2d2d2d ;
+    display:flex; align-items: center;
+    
+    
+}
+.idea_list, .idea_form, .devtool_list, .devtool_form{
+    display:flex; align-items: center;
+
+}
+
+.navbar a{
+    text-decoration:none ;
+    color:inherit;
+    color:#c68d30; /*dcc193*/
+    padding: 0 50px;
+    height: 100%;
+
+}
+
+
+.italic{
+    font-style: italic;
+    color:#75a0d8;
+    padding-right: 5px;
+}
+.sidebar{
+    background-color: #252526;
+    flex: 0 0 150px;
+    width: 7%;
+    /*border: 1px solid black;
+    border-radius: 10px;
+    */
+    padding: 10px;
+    margin: 30px 30px;
+    margin-top: 0px;
+    margin-left: 200px;
+    margin-right: 0;
+    padding-right: 40px;
+
+    position: sticky;
+    top: 130px;              /* ✅ navbar 아래에서 sticky 시작 */
+    height: calc(100vh - -66px); /* ✅ 화면 꽉 차게 */
+}
+
+.sidebar-idea, .sidebar-devtool{
+    margin-bottom: 30px;
+    color:#c68b2b;
+}
+.sidebar-idea, .sidebar-devtool{
+    list-style: none;  
+}
+.sidebar-idea li, .sidebar-devtool li{
+    padding-left: 10px;
+    color:#cccccc;
+}
+.sidebar-idea a, .sidebar-devtool a{
+    text-decoration: none; color: inherit;
+    font-size: 10px;
+}
+
+.bi-chevron-down{
+    color:#cccccc;
+    padding-right: 7px;
+    margin-right: 7px;
+
+}
+
+/* content는 남은 영역 전부 차지 */
+.content{
+    background-color: #1e1e1e;
+    flex: 1; 
+    min-width: 0;                /* ✅ 남은 폭 전부 */
+    padding: 20px;
+    padding-left: 0px;
+}
+.itembox{
+    margin: 20px;
+}
+
+

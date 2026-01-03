@@ -1,0 +1,159 @@
+{% extends "ideaapp/base.html" %}
+{% load static %}
+{%block add_css %}
+    <link rel="stylesheet" href="{% static 'ideaapp/idea_list.css' %}">
+{% endblock %}
+
+
+{% block title %}아이디어 관리{% endblock %}
+
+{% block itembox %} <!--내용 시작. -->
+
+<div class="idea-header">
+  <form method="get">
+    <select name="sort" onchange="this.form.submit()">
+      <option value="latest" {% if sort == "latest" %}selected{% endif %}>최신순</option>
+      <option value="oldest" {% if sort == "oldest" %}selected{% endif %}>등록순</option>
+      <option value="name" {% if sort == "name" %}selected{% endif %}>이름순</option>
+      <option value="star" {% if sort == "star" %}selected{% endif %}>찜하기순</option>
+    </select>
+  </form>
+</div>
+
+
+<ul class="idea-grid">
+  {% for idea in ideas %}
+    <li class="idea-card" data-idea-id="{{ idea.pk }}"> <!-- 항목 하나당 아이디어 카드 하나 -->
+      <button
+          type="button"
+          class="star-btn"
+          data-starred="{% if idea.is_starred %}1{% else %}0{% endif %}">
+          <span class="star-icon">{% if idea.is_starred %}★{% else %}☆{% endif %}</span>
+        </button>
+      
+      <div class="col1">
+        {% if idea.image %}
+        <a href="{% url 'ideaapp:idea_detail' idea.pk %}">
+          <img src="{{ idea.image.url }}" alt="이미지 대체 텍스트" class = "thumb-img">
+          </a>
+        {% endif %}
+
+      </div>
+      
+      <div class="col2"> 
+        <!-- ⭐ 찜 버튼: 썸네일 위 -->
+        
+        <div class="row"><!--아이디어 이름 -->
+          <a href="{% url 'ideaapp:idea_detail' idea.pk %}" class = "row_idea_title">
+          {{ idea.title }}
+          </a>
+        </div>
+        <div class="row"> <!--찜-->
+          <span class = "row_key">찜 <span class="row_value star-count">{{ idea.star_count }}</span></span>
+        </div>
+
+        <div class="row"> <!--관심도 -->
+          <span class = "row_key">관심도 <span class="row_value interest-value">{{ idea.interest }}</span></span>
+          <!-- ➕➖ 관심도 버튼 -->
+          <button type="button" class="interest-btn" data-action="dec">-</button>
+          <button type="button" class="interest-btn" data-action="inc">+</button>
+        </div>
+
+        <div class="row"> <!-- 개발툴 -->
+          <span class = "row_key">개발툴</span><a href="{% url 'ideaapp:devtool_detail' idea.devtool.pk %}" class = "row_value" >{{ idea.devtool.name }}
+          </a>
+        </div>
+      </div>
+    </li>
+  {% empty %}
+    <li>아이디어가 없습니다.</li>
+  {% endfor %}
+</ul>
+  
+  <div class="pagination-bar">
+    <div class="pagi-left">
+    {% if page_obj.has_previous %}
+    <a href="?sort={{ sort }}&page=1" class = "page_btn"> << 처음</a>
+    <a href="?sort={{ sort }}&page={{ page_obj.previous_page_number }}" class = "page_btn"> <이전</a>
+    {% endif %}
+  </div>
+  <div class="pagi-center">
+    <span class = "pagination-number">
+      {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+    </span>
+  </div>
+  <div class="pagi-right">
+    {% if page_obj.has_next %}
+    <a href="?sort={{ sort }}&page={{ page_obj.next_page_number }}" class = "page_btn">다음 ></a>
+    <a href="?sort={{ sort }}&page={{ page_obj.paginator.num_pages }}" class = "page_btn">끝 >></a>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+  // CSRF 토큰 가져오기 (Django 기본)
+  function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+  }
+  const csrftoken = getCookie('csrftoken');
+
+  // 이벤트 위임: 리스트 전체에서 클릭 잡기
+  document.addEventListener("click", async (e) => {
+    // ⭐ 찜 토글
+    const starBtn = e.target.closest(".star-btn");
+    if (starBtn) {
+      const card = starBtn.closest(".idea-card");
+      const ideaId = card.dataset.ideaId;
+
+      const res = await fetch(`/ideas/${ideaId}/toggle_star/`, {
+        method: "POST",
+        headers: {
+          "X-CSRFToken": csrftoken,
+        },
+      });
+
+      if (res.status === 403) {
+        alert("로그인이 필요해!");
+        return;
+      }
+
+      const data = await res.json();
+
+      // UI 업데이트
+      const icon = starBtn.querySelector(".star-icon");
+      starBtn.dataset.starred = data.starred ? "1" : "0";
+      icon.textContent = data.starred ? "★" : "☆";
+      card.querySelector(".star-count").textContent = data.star_count;
+      return;
+    }
+
+    // ➕➖ 관심도 변경
+    const interestBtn = e.target.closest(".interest-btn");
+    if (interestBtn) {
+      const action = interestBtn.dataset.action;
+      const card = interestBtn.closest(".idea-card");
+      const ideaId = card.dataset.ideaId;
+
+      const res = await fetch(`/ideas/${ideaId}/interest/${action}/`, {
+        method: "POST",
+        headers: {
+          "X-CSRFToken": csrftoken,
+        },
+      });
+
+      if (res.status === 403) {
+        alert("로그인이 필요해!");
+        return;
+      }
+
+      const data = await res.json();
+      card.querySelector(".interest-value").textContent = data.interest;
+      return;
+    }
+  });
+</script>
+
+
+{% endblock %}

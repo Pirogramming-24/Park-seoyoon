@@ -1,0 +1,27 @@
+{% extends "ideaapp/base.html" %}
+{% load static %}
+
+{%block add_css %}
+    <link rel="stylesheet" href="{% static 'ideaapp/devtool_list.css' %}">
+{% endblock %}
+{% block title %}개발툴관리{% endblock %}
+
+{% block itembox %}
+
+<ul class = "container">
+<div class="create_btn">
+  <a href="{% url 'ideaapp:devtool_create' %}">+ 개발툴 등록</a>
+</div>
+<hr>
+
+  {% for d in devtools %}
+    <li class = "item">
+      <a href="{% url 'ideaapp:devtool_detail' d.pk %}" class = "title">
+        {{ d.name }}
+      </a> <span class = "kind">{{ d.kind }}</span>
+    </li>
+  {% empty %}
+    <li>개발툴이 없습니다.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

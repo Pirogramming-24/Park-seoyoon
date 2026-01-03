@@ -1,0 +1,86 @@
+{% extends "ideaapp/base.html" %}
+{% load static %}
+
+{%block add_css %}
+    <link rel="stylesheet" href="{% static 'ideaapp/idea_detail.css' %}">
+{% endblock %}
+{% block title %} {{ idea.title }} {% endblock %}
+
+{% block itembox %}
+
+<div class="container">
+  <button type="button" id="starBtn" data-idea-id="{{ idea.pk }}" class = "star-btn">
+    <span id="starIcon">{% if is_starred %}★{% else %}☆{% endif %}</span>
+  </button>
+
+  <h1>{{ idea.title }}</h1>
+  
+  <div class="image">
+    {% if idea.image %}
+    <img src="{{ idea.image.url }}" style="width:300px;">
+    {% endif %}
+  </div>
+  
+  <p class = "idea_content">{{ idea.content }}</p>
+  
+  <span class ="jjim">찜 <span id="starCount">{{ idea.star_count }}</span></span>
+  <p class = "idea_interest">관심도 <span class = "interestcount">{{ idea.interest }}</span></p>
+  
+  <p class = "devtool_info">
+    개발툴
+    <a href="{% url 'ideaapp:devtool_detail' idea.devtool.pk %}">
+      {{ idea.devtool.name }}
+    </a>
+  </p>
+  
+  <hr>
+  
+  <a href="{% url 'ideaapp:idea_list' %}" class = "btn">목록</a>
+<a href="{% url 'ideaapp:idea_edit' idea.pk %}" class = "btn">수정</a>
+
+<form action="{% url 'ideaapp:idea_delete' idea.pk %}" method="post" style="display:inline;">
+  {% csrf_token %}
+  <button type="submit" class = "delete-btn">삭제</button>
+</form>
+
+</div>
+
+<script>
+  // CSRF 토큰 가져오기
+  function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+  }
+  const csrftoken = getCookie('csrftoken');
+
+  const btn = document.getElementById("starBtn");
+  const icon = document.getElementById("starIcon");
+  const countEl = document.getElementById("starCount");
+
+  btn.addEventListener("click", async () => {
+    const ideaId = btn.dataset.ideaId;
+
+    const res = await fetch(`/ideas/${ideaId}/toggle_star/`, {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": csrftoken,
+        "X-Requested-With": "XMLHttpRequest",
+      },
+    });
+
+    if (!res.ok) {
+      if (res.status === 403) {
+        alert("로그인이 필요해!");
+        return;
+      }
+      alert("찜 처리 실패");
+      return;
+    }
+
+    const data = await res.json();
+    icon.textContent = data.starred ? "★" : "☆";
+    countEl.textContent = data.star_count;
+  });
+</script>
+{% endblock %}

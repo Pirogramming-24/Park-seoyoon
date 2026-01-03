@@ -1,0 +1,22 @@
+{% extends "ideaapp/base.html" %}
+{% load static %}
+{%block add_css %}
+    <link rel="stylesheet" href="{% static 'ideaapp/idea_form.css' %}">
+{% endblock %}
+
+{% block title %}아이디어 {% if form.instance.pk %}수정{% else %}등록{% endif %}{% endblock %}
+
+{% block itembox %}
+
+
+<div class="box_form">
+  <form method="post" enctype="multipart/form-data">
+    <span class="token">{% csrf_token %}</span>
+    {{ form.as_p }}
+    <button type="submit" class = "save_btn">저장</button>
+  </form>
+</div>
+
+
+
+{% endblock %}
