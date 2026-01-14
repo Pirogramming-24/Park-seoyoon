@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    {% load static %}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>랜덤 저녁 메뉴 추천</title>
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+
+</head>
+<body>
+  <h1>🍽️ 랜덤 저녁 메뉴 추천</h1>
+
+  <form method="get" action="">
+    <p>오늘은 어떤 종류의 음식을 먹고 싶나요?</p>
+    <select name="category">
+      <option value="korean">한식</option>
+      <option value="chinese">중식</option>
+      <option value="japanese">일식</option>
+      <option value="western">양식</option>
+      <option value="any">아무거나</option>
+    </select>
+    <input type="submit" value="추천 받기">
+  </form>
+
+  <hr>
+
+  {% if result %}
+    <p>오늘의 추천 메뉴는 <strong>{{ result }}</strong> 입니다! 😋</p>
+  {% elif category %}
+    <p>해당 카테고리에서 메뉴를 찾지 못했습니다.</p>
+  {% else %}
+    <p>메뉴 종류를 선택하고 "추천 받기"를 눌러보세요!</p>
+  {% endif %}
+
+
+
+  <hr>
+  <h3>📋 최근 추천 메뉴</h3>
+  <ul>
+    {% for r in records %}
+      <li>[{{ r.category }}] {{ r.menu }}</li>
+    {% empty %}
+      <li>아직 추천 내역이 없습니다.</li>
+    {% endfor %}
+  </ul>
+</body>
+</html>
