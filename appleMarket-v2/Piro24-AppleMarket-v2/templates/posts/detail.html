@@ -4,21 +4,26 @@
 {% block head %}
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous" />
-<style>
-    main {
-        padding: 40px;
-        height: 100%;
-    }
-
-    img {
-        margin: 20px 0;
-    }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>상품 상세</title>    
+    
+    <style>
+        main {
+            padding: 40px;
+            height: 100%;
+        }
+    
+        img {
+            margin: 20px 0;
+        }
+    </style>
 {% endblock%}
 
 
 {% block content %}
 <h1 style="color: green; font-size: 40px">{{post.title}}</h1>
+
 {% if post.photo %}
 <img src="{{post.photo.url}}" alt="제품 이미지" />
 {% else %}
@@ -32,6 +37,116 @@
 <p>작성일: {{post.created_at}}</p>
 <p>수정일: {{post.updated_at}}</p>
 <p>이 작성자의 글</p>
+{% if post.ingredient_image %}
+        <div class="info-row">
+            <div class="info-label">영양성분표:</div>
+            <div class="info-value">
+                <div class="image-container">
+                    <img src="{{ post.ingredient_image.url }}" alt="영양성분표">
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+
+
+        <!-- 영양 성분 섹션 -->
+        <div class="nutrition-section">
+            <div class="nutrition-title">
+                📊 영양 성분 정보
+                <span id="analysis-status"></span>
+            </div>
+            
+            <div id="nutrition-content">
+                <div class="nutrition-grid">
+                    <div class="nutrition-item">
+                        <div class="nutrition-label">칼로리</div>
+                        <div class="nutrition-value">
+                            <span id="calories">{{ post.calories_kcal|default:"0" }}</span>
+                            <span class="nutrition-unit">kcal</span>
+                        </div>
+                    </div>
+                    
+                    <div class="nutrition-item">
+                        <div class="nutrition-label">탄수화물</div>
+                        <div class="nutrition-value">
+                            <span id="carbs">{{ post.carbs_g|default:"0" }}</span>
+                            <span class="nutrition-unit">g</span>
+                        </div>
+                    </div>
+                    
+                    <div class="nutrition-item">
+                        <div class="nutrition-label">단백질</div>
+                        <div class="nutrition-value">
+                            <span id="protein">{{ post.protein_g|default:"0" }}</span>
+                            <span class="nutrition-unit">g</span>
+                        </div>
+                    </div>
+                    
+                    <div class="nutrition-item">
+                        <div class="nutrition-label">지방</div>
+                        <div class="nutrition-value">
+                            <span id="fat">{{ post.fat_g|default:"0" }}</span>
+                            <span class="nutrition-unit">g</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="error-message" style="display: none;" class="error-message"></div>
+        </div>
+{% endblock %}
+
+
+{% block extra_js %}
+<script>
+let pollInterval;
+
+function checkAnalysisStatus() {
+  const url = "{% url 'posts:analysis_status' post.id %}";
+
+  fetch(url)
+    .then(r => r.json())
+    .then(data => {
+      const statusElement = document.getElementById('analysis-status');
+      const errorElement = document.getElementById('error-message');
+
+      if (data.status === 'processing') {
+        statusElement.innerHTML = `
+          <span class="analyzing">
+            <div class="spinner"></div>
+            분석 중...
+          </span>`;
+      } else if (data.status === 'done') {   // ✅ 여기
+        statusElement.innerHTML = '<span style="color:#28a745;">✓ 분석 완료</span>';
+
+        document.getElementById('calories').textContent = data.calories_kcal ?? '0';
+        document.getElementById('carbs').textContent = data.carbs_g ?? '0';
+        document.getElementById('protein').textContent = data.protein_g ?? '0';
+        document.getElementById('fat').textContent = data.fat_g ?? '0';
+
+        clearInterval(pollInterval);
+        setTimeout(() => statusElement.innerHTML = '', 3000);
+      } else if (data.status === 'failed') {
+        statusElement.innerHTML = '<span style="color:#dc3545;">✗ 분석 실패</span>';
+        errorElement.textContent = data.error || '알 수 없는 오류가 발생했습니다.';
+        errorElement.style.display = 'block';
+        clearInterval(pollInterval);
+      }
+    })
+    .catch(err => console.error(err));
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const initialStatus = '{{ post.analysis_status }}';
+  if (initialStatus === 'processing') {
+    checkAnalysisStatus();
+    pollInterval = setInterval(checkAnalysisStatus, 2000);
+  }
+});
+</script>
+{% endblock %}
+
 
 
 <hr />
