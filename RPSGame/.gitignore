@@ -1,0 +1,15 @@
+# model 파일 추가
+hand_landmarker.task
+
+# Python 관련
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+venv/
+*.egg-info/
+
+# IDE
+.vscode/
+.idea/
