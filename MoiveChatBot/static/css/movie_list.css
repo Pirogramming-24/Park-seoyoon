@@ -1,0 +1,168 @@
+/* 전체 컨테이너 */
+.movie_container {
+  margin-top: 24px;
+}
+
+/* UL 리스트 */
+.movie_list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 18px;
+}
+
+/* 카드 하나 */
+.movie-item {
+  background: #181818;
+  border-radius: 10px;
+  overflow: hidden;
+
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+/* hover 효과 (Netflix 핵심) */
+.movie-item:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 16px 32px rgba(0,0,0,0.6);
+}
+
+/* 포스터 영역 */
+.movie-item img.poster-img {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  display: block;
+}
+
+/* 카드 내부 텍스트 영역 */
+.movie-item > div {
+  padding: 10px 12px;
+}
+
+/* 제목 */
+.movie-item .title {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  line-height: 1.3;
+}
+
+/* 제목 링크 */
+.movie-item .title a {
+  text-decoration: none;
+  color: #fff;
+}
+
+.movie-item .title a:hover {
+  color: #E50914;
+}
+
+/* 메타 정보 */
+.movie-item div:nth-of-type(3) {
+  font-size: 13px;
+  color: #b3b3b3;
+  margin-bottom: 8px;
+}
+
+/* 수정 / 삭제 버튼 영역 */
+.movie-item div:last-child {
+  display: flex;
+  gap: 8px;
+}
+
+/* 수정 / 삭제 버튼 */
+.movie-item div:last-child a {
+  flex: 1;
+  text-align: center;
+
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 0;
+
+  border-radius: 6px;
+  text-decoration: none;
+
+  background: #232323;
+  color: #fff;
+
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+/* hover 공통 */
+.movie-item div:last-child a:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.5);
+}
+
+/* 삭제 버튼만 Netflix Red */
+.movie-item div:last-child a:last-child {
+  background: rgba(229, 9, 20, 0.18);
+  border: 1px solid rgba(229, 9, 20, 0.5);
+}
+
+.movie-item div:last-child a:last-child:hover {
+  background: #E50914;
+}
+
+/* a 태그 기본 스타일 제거 */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* 상단 제목 */
+h2 {
+  margin-bottom: 16px;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+/* 검색 폼 */
+form {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+form input,
+form select {
+  background: #111;
+  border: 1px solid #2a2a2a;
+  color: #fff;
+  padding: 6px 8px;
+  border-radius: 6px;
+}
+
+form button {
+  background: #E50914;
+  border: none;
+  color: #fff;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+form button:hover {
+  background: #b20710;
+}
+
+/* 페이지네이션 */
+.movie_container + div {
+  margin-top: 24px;
+  text-align: center;
+}
+
+.movie_container + div a {
+  margin: 0 6px;
+  color: #E50914;
+  font-weight: 600;
+}

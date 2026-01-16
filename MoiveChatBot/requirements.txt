@@ -1,0 +1,23 @@
+# Django (LTS)
+django>=4.2,<5.0
+
+# LangChain core
+langchain
+langchain-community
+langchain-core
+langchain-text-splitters
+
+# Upstage (LLM & Embeddings)
+langchain-upstage
+
+# Vector DB (Chroma)
+chromadb
+langchain-chroma
+
+# Env & CORS
+python-dotenv
+django-cors-headers
+
+# PDF loaders
+pymupdf
+pypdf
