@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}영화 삭제{% endblock %}
+
+{% block content %}
+<h2>영화 삭제</h2>
+<p>"{{ movie.title }}"을(를) 삭제할까요?</p>
+
+<form method="post">
+  {% csrf_token %}
+  <button type="submit">삭제</button>
+  <a href="{% url 'movie_detail' movie.pk %}">취소</a>
+</form>
+{% endblock %}

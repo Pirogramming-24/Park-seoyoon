@@ -1,0 +1,213 @@
+/* 전체 카드 */
+.movie-detail-card{
+  width: 100%;
+  max-width: 980px;
+  margin: 0 auto;
+
+  background: rgba(24, 24, 24, 0.88); /* Netflix 카드 */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  border-radius: 14px;
+  padding: 28px;
+  color: #fff;
+
+  border: 1px solid #222;
+}
+
+/* 헤더 */
+.movie-detail-header{
+  border-bottom: 1px solid #2a2a2a;
+  padding-bottom: 14px;
+  margin-bottom: 22px;
+  text-align: center;
+}
+
+.movie-title{
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+}
+
+/* 본문 */
+.movie-detail-body{
+  display: flex;
+  gap: 28px;
+  align-items: flex-start;
+}
+
+/* 포스터 */
+.movie-poster{
+  flex: 0 0 220px;
+}
+
+.poster-img{
+  width: 220px;
+  height: auto;
+  border-radius: 10px;
+  display: block;
+
+  border: 1px solid #2a2a2a;
+  box-shadow: 0 14px 28px rgba(0,0,0,0.45);
+}
+
+/* 정보 영역 */
+.movie-info{
+  flex: 1;
+}
+
+.info-list{
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.info-row{
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  gap: 16px;
+
+  padding: 12px 0;
+  border-bottom: 1px solid #222;
+}
+
+/* 공통 라벨 */
+.label{
+  font-size: 13px;
+  color: #b3b3b3;
+  letter-spacing: 0.2px;
+}
+
+/* 실제 값 강조 */
+.value{
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.value .sub{
+  font-size: 13px;
+  font-weight: 400;
+  color: #9ca3af;
+  margin-left: 6px;
+}
+
+/* 버튼 영역 */
+.action-buttons{
+  display: flex;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+/* 공통 버튼 */
+.btn{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  text-decoration: none;
+  color: #fff;
+
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: 1px solid #2a2a2a;
+  background: #181818;
+
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.btn:hover{
+  transform: translateY(-2px);
+  background: #232323;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.45);
+}
+
+/* 기본 버튼 */
+.btn-outline{
+  border-color: #333;
+}
+
+/* 삭제 버튼 (Netflix Red) */
+.btn-danger{
+  border-color: rgba(229, 9, 20, 0.6);
+  background: rgba(229, 9, 20, 0.18);
+  color: #fff;
+}
+
+.btn-danger:hover{
+  background: #E50914;
+  box-shadow: 0 10px 22px rgba(229, 9, 20, 0.45);
+}
+
+/* 비활성 */
+.btn-disabled{
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+/* 리뷰 섹션 */
+.review-section{
+  margin-top: 26px;
+}
+
+.review-header{
+  border-top: 1px solid #2a2a2a;
+  padding-top: 16px;
+  margin-top: 22px;
+  margin-bottom: 10px;
+}
+
+.review-title{
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+/* 리뷰 박스 */
+.review-box{
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  padding: 16px;
+  background: #111;
+
+  line-height: 1.65;
+  color: #e5e5e5;
+}
+
+/* 이전 / 다음 */
+.detail-pagination{
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 22px;
+}
+
+/* 반응형 */
+@media (max-width: 720px){
+  .movie-detail-body{
+    flex-direction: column;
+  }
+
+  .movie-poster{
+    flex: 0 0 auto;
+    margin: 0 auto;
+  }
+
+  .poster-img{
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .detail-pagination{
+    flex-direction: column;
+  }
+}

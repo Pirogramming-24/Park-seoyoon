@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ movie.title }}{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/movie_detail.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="movie-detail-card">
+  <div class="movie-detail-header">
+    <h2 class="movie-title">{{ movie.title }}</h2>
+  </div>
+
+  <div class="movie-detail-body">
+    <div class="movie-poster">
+      {% if movie.poster %}
+        <img src="{{ movie.poster.url }}" alt="{{ movie.title }} poster" class="poster-img">
+      {% elif movie.poster_url %}
+        <img src="{{ movie.poster_url }}" alt="{{ movie.title }} poster" class="poster-img">
+      {% else %}
+        <img src="{% static 'images/no-poster.png' %}" alt="no poster" class="poster-img">
+      {% endif %}
+    </div>
+
+    <div class="movie-info">
+      <ul class="info-list">
+        <li class="info-row">
+          <span class="label">개봉년도</span>
+          <span class="value">{{ movie.release_year }}</span>
+        </li>
+        <li class="info-row">
+          <span class="label">장르</span>
+          <span class="value">{{ movie.genre }}</span>
+        </li>
+        <li class="info-row">
+          <span class="label">감독</span>
+          <span class="value">{{ movie.director|default:"-" }}</span>
+        </li>
+        <li class="info-row">
+          <span class="label">배우</span>
+          <span class="value">{{ movie.actors|default:"-" }}</span>
+        </li>
+        <li class="info-row">
+          <span class="label">러닝타임</span>
+          <span class="value">{{ movie.get_runtime_display }}</span>
+        </li>
+        <li class="info-row">
+          <span class="label">별점</span>
+          <span class="value">{{ movie.get_star_rating }} <span class="sub">({{ movie.rating }})</span></span>
+        </li>
+        <li class="info-row">
+          <span class="label">등록일</span>
+          <span class="value">{{ movie.created_at }}</span>
+        </li>
+      </ul>
+
+      <div class="action-buttons">
+        <a class="btn btn-outline" href="{% url 'movie_update' movie.pk %}">수정</a>
+        <a class="btn btn-danger" href="{% url 'movie_delete' movie.pk %}">삭제</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="review-section">
+    <div class="review-header">
+      <h3 class="review-title">리뷰</h3>
+    </div>
+    <div class="review-box">
+      {{ movie.review|linebreaksbr|default:"(리뷰 없음)" }}
+    </div>
+  </div>
+
+  <div class="detail-pagination">
+    {% if prev_movie %}
+      <a class="btn btn-outline" href="{% url 'movie_detail' prev_movie.pk %}">← 이전 영화</a>
+    {% else %}
+      <span class="btn btn-disabled">← 이전 영화</span>
+    {% endif %}
+
+    {% if next_movie %}
+      <a class="btn btn-outline" href="{% url 'movie_detail' next_movie.pk %}">다음 영화 →</a>
+    {% else %}
+      <span class="btn btn-disabled">다음 영화 →</span>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

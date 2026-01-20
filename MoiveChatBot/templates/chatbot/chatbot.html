@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}챗봇{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/chatbot.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="chat-page">
+  <div class="chat-header">
+    <h2 class="chat-title">영화 챗봇</h2>
+    <p class="chat-subtitle">영화 정보/리뷰 기반으로 답해줄게. (새로고침하면 대화는 초기화)</p>
+  </div>
+
+  <div id="chat-log" class="chat-log" aria-live="polite"></div>
+
+  <form id="chat-form" class="chat-form" method="post" action="{% url 'chatbot_response' %}">
+    {% csrf_token %}
+    <input
+      type="text"
+      name="message"
+      id="msg"
+      class="chat-input"
+      placeholder="예) 별점 높은 드라마 추천해줘"
+      autocomplete="off"
+    >
+    <button type="submit" class="chat-send">전송</button>
+  </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  const form = document.getElementById("chat-form");
+  const input = document.getElementById("msg");
+  const log = document.getElementById("chat-log");
+
+  // ✅ 새로고침하면 초기화되는 저장소(sessionStorage)
+  const STORAGE_KEY = "movie_chat_history_session_v1";
+
+  function loadHistory() {
+    try {
+      const raw = sessionStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : [];
+    } catch {
+      return [];
+    }
+  }
+
+  function saveHistory(history) {
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(history));
+  }
+
+  function renderHistory(history) {
+    log.innerHTML = "";
+    for (const msg of history) {
+      appendBubble(msg.role, msg.text, false);
+    }
+    log.scrollTop = log.scrollHeight;
+  }
+
+  function appendBubble(role, text, shouldSave = true) {
+    const row = document.createElement("div");
+    row.className = "chat-row " + (role === "user" ? "is-user" : "is-bot");
+
+    const bubble = document.createElement("div");
+    bubble.className = "chat-bubble " + (role === "user" ? "bubble-user" : "bubble-bot");
+    bubble.textContent = text;
+
+    row.appendChild(bubble);
+    log.appendChild(row);
+    log.scrollTop = log.scrollHeight;
+
+    if (shouldSave) {
+      const history = loadHistory();
+      history.push({ role, text });
+      saveHistory(history);
+    }
+    return bubble;
+  }
+
+  function setSending(disabled) {
+    input.disabled = disabled;
+    form.querySelector("button").disabled = disabled;
+  }
+
+  // ✅ 페이지 들어올 때 이전 대화 복원 (같은 탭/새로고침 전까지만)
+  renderHistory(loadHistory());
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const message = input.value.trim();
+    if (!message) return;
+
+    // 유저 말 저장 + 표시
+    appendBubble("user", message);
+    input.value = "";
+
+    setSending(true);
+
+    // 로딩 말풍선은 저장하지 않음
+    const loadingBubble = appendBubble("bot", "…", false);
+
+    try {
+      const fd = new FormData(form);
+      fd.set("message", message);
+
+      const res = await fetch(form.action, { method: "POST", body: fd });
+      const data = await res.json();
+
+      const answer = data.answer ?? "(응답 없음)";
+      loadingBubble.textContent = answer;
+
+      // ✅ 실제 답변만 저장
+      const history = loadHistory();
+      history.push({ role: "bot", text: answer });
+      saveHistory(history);
+
+    } catch (err) {
+      const errMsg = "오류가 발생했어. 잠시 후 다시 시도해줘.";
+      loadingBubble.textContent = errMsg;
+
+      const history = loadHistory();
+      history.push({ role: "bot", text: errMsg });
+      saveHistory(history);
+
+    } finally {
+      setSending(false);
+      input.focus();
+      log.scrollTop = log.scrollHeight;
+    }
+  });
+
+  // Enter 전송
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      form.requestSubmit();
+    }
+  });
+</script>
+{% endblock %}
