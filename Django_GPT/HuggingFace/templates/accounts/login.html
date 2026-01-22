@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<h2>로그인</h2>
+
+<form method="post" action="{% url 'account_login' %}">
+  {% csrf_token %}
+  {{ form.as_p }}
+
+  {% if redirect_field_value %}
+    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}">
+  {% endif %}
+
+  <button type="submit">로그인</button>
+</form>
+
+<p>
+  계정이 없나요?
+  <a href="{% url 'account_signup' %}">회원가입</a>
+</p>
+{% endblock %}
