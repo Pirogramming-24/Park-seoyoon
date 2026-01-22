@@ -1,0 +1,13 @@
+services:
+  web:
+    # 1) '내ID' 부분을 실제 서윤님의 도커 허브 아이디로 수정하세요!
+    # 예: seoyoon/pirostagram:v1.0
+    image: banu71/pirostagram:v1.0  
+    
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=True
+    volumes:
+      - ./db.sqlite3:/app/db.sqlite3

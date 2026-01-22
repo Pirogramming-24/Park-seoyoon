@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{%load static%}
+
+{% block title %}텍스트 생성{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <h2>텍스트 생성 (공개)</h2>
+        <p class="text-muted">모델: distilgpt2 | 비로그인 사용자도 이용 가능</p>
+        
+        <form method="post"  onsubmit="startLoading(this)">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary" id = "submit-btn">생성</button>
+            <div id="loading" style="display:none;">
+            <h5>로딩중.. 잠시만 기다려주세요</h5>
+            </div>
+        </form>
+
+        {% if error %}
+            <div class="alert alert-danger mt-3">{{ error }}</div>
+        {% endif %}
+
+        {% if result %}
+            <div class="alert alert-success mt-3">
+                <h5>생성 결과:</h5>
+                <p>{{ result }}</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="col-md-4">
+        <div class="history-section">
+            <h5>최근 히스토리</h5>
+            {% if not user.is_authenticated %}
+                <p class="text-muted small">* 비로그인: 새로고침 시 초기화</p>
+            {% endif %}
+            
+            {% if history %}
+                {% for item in history|slice:":5" %}
+                    <div class="history-item">
+                        <strong>입력:</strong> {{ item.user_input|truncatewords:10 }}<br>
+                        <strong>출력:</strong> {{ item.model_output|truncatewords:15 }}
+                        {% if item.created_at %}
+                            <br><small class="text-muted">{{ item.created_at }}</small>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-muted">히스토리가 없습니다.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{%block extra_js%}
+<script>
+function startLoading(form) {
+    document.getElementById("loading").style.display = "block";
+    document.getElementById("submit-btn").disabled = true;
+}
+</script>
+{%endblock%}

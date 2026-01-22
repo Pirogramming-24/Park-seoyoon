@@ -1,0 +1,81 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{%block title%} Pirostagram {%endblock%}</title>
+    <link rel="stylesheet" href="/static/css/app.css">
+    {%block extra_css%} {%endblock%}
+</head>
+<body>
+    <header class="topbar">
+      <div class="topbar-inner">
+        <a class="logo" href="/">Pirostagram</a>
+        <nav class="nav">
+            <a href="/">Feed</a>
+          {% if user.is_authenticated %}
+            <a href="{% url 'accounts:profile' user.username %}">My</a>
+            <a href="{% url 'accounts:logout' %}">Logout</a>
+          {% else %}
+            <a href="{% url 'accounts:login' %}">Login</a>
+            <a href="/admin/">Admin</a>
+          {% endif %}
+        </nav>
+      </div>
+  </header>
+  <main class="container">
+    {% block content %}{% endblock %}
+
+    <div class="bottombar">
+      <div class="bottom-list">
+        <div class="bottom-item"><a href="/">
+          <img src="/static/images/instagram-home-feed-icon.png" class = "bottom-image" alt="홈화면">
+        </a></div>
+        <div class="bottom-item">
+          <a href="{% url 'accounts:search' %}"> 
+            <img src="/static/images/instagram-search-icon.png" class = "bottom-image" alt="검색하기">
+          </a>
+        </div>
+        <div class="bottom-item">
+          {% if user.is_authenticated %}
+            <a href="{% url 'posts:create' %}">
+              <img src="/static/images/instagram-add-new-post-icon.png" class = "bottom-image" alt="게시물 생성">
+            </a>
+          {%else%}
+            <a href="#" onclick="requireLogin(event)">
+              <img src="/static/images/instagram-add-new-post-icon.png" class = "bottom-image" alt="게시물 생성">
+            </a>
+          {% endif %}
+        </div>
+        <div class="bottom-item">
+          {% if user.is_authenticated %}
+            <a href="{% url 'accounts:profile' user.username %}">
+            <img src="/static/images/user.png" class = "bottom-image" alt="프로필">
+          </a>
+          {%else%}
+            <a href="#" onclick="requireLogin(event)">
+              <img src="/static/images/user.png" class = "bottom-image" alt="프로필">
+            </a>
+          {% endif %}
+          
+        </div>
+          
+          
+        </div>
+    </div>
+  </main>
+
+  <script src="/static/js/like.js"></script>
+  <script src="/static/js/story.js"></script>
+  <script>
+  function requireLogin(e) {
+    e.preventDefault(); // 링크 이동 막기
+    alert("로그인이 필요합니다.");
+    window.location.href = "{% url 'accounts:login' %}";
+  }
+  </script>
+
+
+</body>
+</html>

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Edit Comment | Pirostagram{% endblock %}
+
+{% block content %}
+  <div class="panel">
+    <h2 class="panel-title">댓글 수정</h2>
+
+    <form method="post" class="form">
+      {% csrf_token %}
+      <div class="field">
+        {{ form.content }}
+        {{ form.content.errors }}
+      </div>
+
+      <div class="row">
+        <button class="btn primary" type="submit">저장</button>
+        <a class="btn" href="{% url 'posts:feed' %}">취소</a>
+      </div>
+    </form>
+  </div>
+{% endblock %}

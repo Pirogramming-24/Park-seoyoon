@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Login | Pirostagram{% endblock %}
+
+{% block content %}
+  <div class="panel">
+    <h2 class="panel-title">로그인</h2>
+
+    {% if error %}
+      <p style="color:#ef4444; font-size:14px;">{{ error }}</p>
+    {% endif %}
+
+    <form method="post" class="form">
+      {% csrf_token %}
+
+      <div class="field">
+        <label>아이디(username)</label>
+        <input type="text" name="username" required />
+      </div>
+
+      <div class="field">
+        <label>비밀번호</label>
+        <input type="password" name="password" required />
+      </div>
+
+      <div class="row">
+        <button class="btn primary" type="submit">로그인</button>
+        <a class="btn" href="{% url 'posts:feed' %}">취소</a>
+      </div>
+    </form>
+
+    <p style="margin-top:12px; font-size:13px; color:#666;">
+      * 유저 생성은 일단 /admin/ 에서 User 추가로 해도 돼. (나중에 회원가입 붙일 수 있음)
+    </p>
+  </div>
+{% endblock %}

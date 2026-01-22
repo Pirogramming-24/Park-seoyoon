@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% block title %}Comments | Pirostagram{% endblock %}
+
+{% block content %}
+  <div class="panel">
+    <h2 class="panel-title">댓글</h2>
+
+    <!-- 게시글 요약 -->
+    <div class="mini-post">
+      <div class="mini-user"><b>{{ post.author.username }}</b>의 게시글</div>
+      <div class="mini-img">
+        <img src="{{ post.image.url }}" alt="post image">
+      </div>
+      {% if post.content %}
+        <p style="margin:10px 0 0 0; color:#333;">{{ post.content }}</p>
+      {% endif %}
+    </div>
+
+    <!-- 댓글 목록 -->
+    <div class="comment-list" style="margin-top:14px;">
+      {% for c in comments %}
+        <div class="comment-item">
+          <span class="comment-author">{{ c.author.username }}</span>
+          <span class="comment-text">{{ c.content }}</span>
+
+          <span class="comment-actions">
+            <!-- 답글 달기 -->
+            {% if user.is_authenticated %}
+              <a class="link" href="{% url 'comments:post_comments' post.id %}?reply_to={{ c.id }}">답글</a>
+            {% endif %}
+
+            {% if user.is_authenticated and c.author_id == user.id %}
+              <a class="link" href="{% url 'comments:post_comments' post.id %}?edit={{ c.id }}">수정</a>
+              <form method="post" action="{% url 'comments:delete' post.id c.id %}" style="display:inline;">
+                {% csrf_token %}
+                <button class="link danger" type="submit">삭제</button>
+              </form>
+            {% endif %}
+          </span>
+        </div>
+
+        <!-- 댓글 인라인 수정폼 -->
+        {% if edit_comment and edit_comment.id == c.id and edit_form %}
+          <form method="post" action="{% url 'comments:update' post.id c.id %}" class="comment-edit-form">
+            {% csrf_token %}
+            {{ edit_form.content }}
+            <div class="row" style="margin-top:8px;">
+              <button class="btn primary" type="submit">저장</button>
+              <a class="btn" href="{% url 'comments:post_comments' post.id %}">취소</a>
+            </div>
+          </form>
+        {% endif %}
+
+        <!-- ✅ 대댓글 목록 -->
+        <div class="reply-list">
+          {% for r in c.replies.all %}
+            <div class="reply-item">
+              <span class="reply-author">{{ r.author.username }}</span>
+              <span class="reply-text">{{ r.content }}</span>
+
+              {% if user.is_authenticated and r.author_id == user.id %}
+                <span class="reply-actions">
+                  <a class="link" href="{% url 'comments:post_comments' post.id %}?reply_edit={{ r.id }}">수정</a>
+                  <form method="post" action="{% url 'comments:reply_delete' post.id c.id r.id %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button class="link danger" type="submit">삭제</button>
+                  </form>
+                </span>
+              {% endif %}
+            </div>
+
+            <!-- 대댓글 인라인 수정폼 -->
+            {% if reply_edit_obj and reply_edit_obj.id == r.id and reply_edit_form %}
+              <form method="post" action="{% url 'comments:reply_update' post.id c.id r.id %}" class="reply-edit-form">
+                {% csrf_token %}
+                {{ reply_edit_form.content }}
+                <div class="row" style="margin-top:8px;">
+                  <button class="btn primary" type="submit">저장</button>
+                  <a class="btn" href="{% url 'comments:post_comments' post.id %}">취소</a>
+                </div>
+              </form>
+            {% endif %}
+          {% empty %}
+            <!-- 대댓글이 없으면 아무것도 안 보여도 됨 -->
+          {% endfor %}
+        </div>
+
+        <!-- ✅ 대댓글 작성폼(특정 댓글에만 표시) -->
+        {% if reply_form and reply_target_comment_id == c.id %}
+          <form method="post" action="{% url 'comments:reply_create' post.id c.id %}" class="reply-form">
+            {% csrf_token %}
+            {{ reply_form.content }}
+            <div class="row" style="margin-top:8px;">
+              <button class="btn primary" type="submit">답글 게시</button>
+              <a class="btn" href="{% url 'comments:post_comments' post.id %}">취소</a>
+            </div>
+          </form>
+        {% endif %}
+
+        <hr style="border:none;border-top:1px solid #eee;margin:14px 0;">
+      {% empty %}
+        <p style="color:#666;">댓글이 아직 없어요.</p>
+      {% endfor %}
+    </div>
+
+    <!-- 댓글 작성 -->
+    <div style="margin-top:16px;">
+      {% if user.is_authenticated %}
+        <form method="post" class="comment-form">
+          {% csrf_token %}
+          {{ form.content }}
+          <button class="btn primary" type="submit">댓글 게시</button>
+        </form>
+      {% else %}
+        <p style="color:#666; font-size:13px;">댓글/답글 작성은 로그인 후 가능해요.</p>
+        <a class="btn" href="{% url 'accounts:login' %}">로그인 하러가기</a>
+      {% endif %}
+    </div>
+
+    <div style="margin-top:16px;">
+      <a class="btn" href="{% url 'posts:feed' %}">← 피드로</a>
+    </div>
+  </div>
+{% endblock %}

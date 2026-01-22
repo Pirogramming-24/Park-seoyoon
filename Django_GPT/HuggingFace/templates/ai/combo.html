@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>🔗 AI Combo: Summary → Sentiment</h2>
+
+<form method="post" onsubmit="startLoading(this)">
+  {% csrf_token %}
+  {{ form.as_p }}
+
+  <button type="submit" id = "submit-btn">실행</button>
+  <div id="loading" style="display:none;">
+            <h5>로딩중.. 잠시만 기다려주세요</h5>
+            </div>
+  {% if result %}
+    <button type="submit" id = "submit-btn">재생성</button>
+    <div id="loading" style="display:none;">
+            <h5>로딩중.. 잠시만 기다려주세요</h5>
+            </div>
+  {% endif %}
+</form>
+
+{% if result %}
+  <h3>최종 결과</h3>
+  <pre>{{ result }}</pre>
+{% endif %}
+
+
+  {% if history %}
+    {% for item in history|slice:":5" %}
+        <div class="history-item">
+            <strong>입력 텍스트:</strong>
+            {{ item.user_input|truncatewords:8 }}<br>
+
+            <strong>결과:</strong><br>
+            <div class="combo-result">
+                {{ item.model_output|truncatewords:30 }}
+            </div>
+
+            <small class="text-muted">
+                {{ item.created_at }}
+            </small>
+        </div>
+    {% endfor %}
+{% else %}
+    <p class="text-muted">히스토리가 없습니다.</p>
+{% endif %}
+
+{% endblock %}
+{%block extra_js%}
+<script>
+function startLoading(form) {
+    document.getElementById("loading").style.display = "block";
+    document.getElementById("submit-btn").disabled = true;
+}
+</script>
+{%endblock%}

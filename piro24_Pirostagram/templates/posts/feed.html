@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% block title %}Feed | Pirostagram{% endblock %}
+
+{% block content %}
+
+<div class="container-feed">
+
+
+<div class="story-bar">
+    <div class="story-list">
+  {% if user.is_authenticated %}
+    <a class="story-btn" href="{% url 'stories:create' %}">
+        <img src="/static/images/story.jpg" alt="">
+    </a>
+  {% endif %}
+
+    {% for s in stories %}
+      <a class="story-circle" href="{% url 'stories:view' s.id %}">
+        <div class="circle">{{ s.author.username|slice:":1"|upper }}</div>
+        <div class="name">{{ s.author.username }}</div>
+      </a>
+    {% empty %}
+      <div class="hint">활성 스토리가 없어요.</div>
+    {% endfor %}
+  </div>
+</div>
+
+
+
+    <div class="feed">
+        {% for post in posts %}
+            <article class="card">
+                <div class="card-header"> <!--게시자 정보 -->
+                    <div class="username">{{ post.author.username }}</div>
+
+                    <div class="header-right">
+                        <div class="meta">{{ post.created_at|date:"Y-m-d H:i" }}</div>
+
+                        {% if user.is_authenticated and post.author_id == user.id %}
+                            <div class="post-menu">
+                            <a class="link" href="{% url 'posts:update' post.id %}">수정</a>
+                            <a class="link danger" href="{% url 'posts:delete' post.id %}">삭제</a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="card-image"><img src="{{ post.image.url }}" alt="post image"></div>
+
+                <div class="card-body"> <!--게시물의 내용(이미지, 글, 댓글 등)-->
+                {% if post.content %}
+                    <p class="content">{{ post.content }}</p>
+                {% endif %}
+
+                <div class="counts"> <!--하단영역-->
+                    <span class="like-count" data-post-id="{{ post.id }}">
+                        좋아요 <b>{{ post.like_count }}</b></span>
+                    <span>댓글 {{ post.comment_count }}</span>
+                    <div class="comments">
+                        <div class="comment-list">
+                            {% for c in post.comments.all|slice:":3" %}
+                            <div class="comment-item">
+                                <span class="comment-author">{{ c.author.username }}</span>
+                                <span class="comment-text">{{ c.content }}</span>
+                            </div>
+                            {% empty %}
+                            <div class="comment-empty">댓글이 아직 없어요.</div>
+                            {% endfor %}
+
+                            {% if post.comment_count > 3 %}
+                            <div class="comment-more">
+                                <a class="link" href="{% url 'comments:post_comments' post.id %}">
+                                댓글 {{ post.comment_count }}개 모두 보기
+                                </a>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="actions">
+                    {% if user.is_authenticated %}
+                        
+                                <button
+                                    type="button"
+                                    class="btn like-btn {% if post.id in liked_post_ids %}liked{% endif %}"
+                                    data-post-id="{{ post.id }}"
+                                    data-like-url="{% url 'posts:like_toggle' post.id %}"
+                                    aria-label="like"
+                                    {% if not user.is_authenticated %}data-requires-auth="1"{% endif %}
+                                >
+                                    {% if post.id in liked_post_ids %}❤️{% else %}🤍{% endif %}
+                                </button>
+                                <a class="btn" href="{% url 'comments:post_comments' post.id %}" aria-label="comment">💬</a>
+                    {% else %}
+                        <button type="button" class="btn" disabled title="로그인 후 가능">🤍</button>
+                        <a class="btn" href="{% url 'accounts:login' %}" title="로그인 후 가능">💬</a>
+                    {% endif %}
+                </div>
+
+                </div>
+            </article>
+        {% empty %}
+            <p>아직 게시글이 없어요. 새 게시글을 올려보자!</p>
+        {% endfor %}
+
+    </div>
+    
+</div>
+
+{% endblock %}

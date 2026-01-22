@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Profile | Pirostagram{% endblock %}
+
+{% block content %}
+  <div class="panel">
+    <h2 class="panel-title">{{ profile_user.username }}</h2>
+
+    <div style="color:#666; margin-bottom:10px;">
+      {% if profile_user.first_name or profile_user.last_name %}
+        {{ profile_user.last_name }}{{ profile_user.first_name }}
+      {% endif %}
+    </div>
+
+    <div class="profile-stats">
+      <div><b>{{ follower_count }}</b><div style="color:#666; font-size:12px;">팔로워</div></div>
+      <div><b>{{ following_count }}</b><div style="color:#666; font-size:12px;">팔로잉</div></div>
+    </div>
+
+     {% if user.is_authenticated and user != profile_user %}
+    <form method="post"
+          action="{% url 'accounts:follow_toggle' profile_user.username %}"
+          style="margin-top:12px;">
+      {% csrf_token %}
+
+      {% if is_following %}
+        <button type="submit" class="btn" style="width:100%;">
+          Following
+        </button>
+      {% else %}
+        <button type="submit" class="btn primary" style="width:100%;">
+          Follow
+        </button>
+      {% endif %}
+    </form>
+  {% endif %}
+
+    <div style="margin-top:14px;">
+      <a class="btn" href="{% url 'posts:feed' %}">← 피드로</a>
+      <a class="btn" href="{% url 'accounts:search' %}">검색으로</a>
+    </div>
+  </div>
+{% endblock %}
