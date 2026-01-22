@@ -1,0 +1,27 @@
+{% extends "base.html" %}{% load static %}
+{% block title %}Story | Pirostagram{% endblock %}
+
+{% block content %}
+  <div class="story-page"
+       data-story-urls='[
+         {% for item in story.items.all %}
+           "{{ item.image.url }}"{% if not forloop.last %},{% endif %}
+         {% endfor %}
+       ]'
+       data-redirect-url="{% url 'posts:feed' %}">
+    <div class="story-header">
+      <div class="story-user">
+        <b>{{ story.author.username }}</b>
+      </div>
+      <a class="btn story-close-btn" href="{% url 'posts:feed' %}">닫기</a>
+    </div>
+
+    <div class="story-progress" id="storyProgress"></div>
+
+    <div class="story-stage">
+      <img id="storyImage" src="" alt="story">
+    </div>
+
+    <div class="story-hint">화면을 클릭하면 다음으로 넘겨요</div>
+  </div>
+{% endblock %}

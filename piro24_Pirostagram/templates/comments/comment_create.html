@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}New Comment | Pirostagram{% endblock %}
+
+{% block content %}
+  <div class="panel">
+    <h2 class="panel-title">댓글 작성</h2>
+
+    <div class="mini-post">
+      <div class="mini-user"><b>{{ post.author.username }}</b>의 게시글</div>
+      <div class="mini-img">
+        <img src="{{ post.image.url }}" alt="post image">
+      </div>
+    </div>
+
+    <form method="post" class="form">
+      {% csrf_token %}
+      <div class="field">
+        <label>댓글</label>
+        {{ form.content }}
+        {{ form.content.errors }}
+      </div>
+
+      <div class="row">
+        <button class="btn primary" type="submit">게시</button>
+        <a class="btn" href="{% url 'posts:feed' %}">취소</a>
+      </div>
+    </form>
+  </div>
+{% endblock %}

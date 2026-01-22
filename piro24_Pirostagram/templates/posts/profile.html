@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}{{ profile_user.username }} | Pirostagram{% endblock %}
+
+{% block content %}
+  <div class="profile">
+    <div class="profile-head">
+      <div class="profile-name">
+        <h2>{{ profile_user.username }}</h2>
+      </div>
+
+      <div class="profile-stats">
+        <div><b>{{ followers_count }}</b> followers</div>
+        <div><b>{{ following_count }}</b> following</div>
+        <div><b>{{ profile_user.posts.count }}</b> posts</div>
+      </div>
+
+      {% if user.is_authenticated and user.id != profile_user.id %}
+        <form method="post" action="{% url 'accounts:follow_toggle' profile_user.username %}">
+          {% csrf_token %}
+          {% if is_following %}
+            <button class="btn" type="submit">언팔로우</button>
+          {% else %}
+            <button class="btn primary" type="submit">팔로우</button>
+          {% endif %}
+        </form>
+      {% endif %}
+    </div>
+
+    <div class="profile-grid">
+      {% for post in posts %}
+        <a class="grid-item" href="{% url 'accounts:profile' post.author.username %}">
+          <img src="{{ post.image.url }}" alt="post">
+        </a>
+      {% empty %}
+        <p>게시글이 아직 없어요.</p>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}

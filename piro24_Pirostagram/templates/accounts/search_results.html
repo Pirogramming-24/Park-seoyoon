@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}Search | Pirostagram{% endblock %}
+
+{% block content %}
+
+
+  <div class="container-feed">
+    <form class="search" action="{% url 'accounts:search' %}" method="get">
+      <input name="q" placeholder="검색어를 입력하세요" value="{{ q|default:'' }}" />
+      <button type="submit" class="search-btn">검색</button>
+    </form>
+    {% if q %}
+      <div class="search-head">
+        <div class="search-query">검색: <b>{{ q }}</b></div>
+
+        <!-- 정렬 옵션은 게시글 탭일 때만 노출 -->
+        {% if tab == "posts" %}
+          <div class="search-sort">
+            <a href="{% url 'accounts:search' %}?q={{ q }}&tab=posts&sort=new"
+               class="{% if sort == 'new' %}active{% endif %}">최신순</a>
+            <a href="{% url 'accounts:search' %}?q={{ q }}&tab=posts&sort=likes"
+               class="{% if sort == 'likes' %}active{% endif %}">좋아요순</a>
+            <a href="{% url 'accounts:search' %}?q={{ q }}&tab=posts&sort=comments"
+               class="{% if sort == 'comments' %}active{% endif %}">댓글순</a>
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="search-tabs">
+        <a href="{% url 'accounts:search' %}?q={{ q }}&tab=posts&sort={{ sort }}"
+           class="{% if tab == 'posts' %}active{% endif %}">게시글</a>
+        <a href="{% url 'accounts:search' %}?q={{ q }}&tab=users"
+           class="{% if tab == 'users' %}active{% endif %}">유저</a>
+      </div>
+
+      {% if tab == "users" %}
+        <div class="user-search-results">
+          {% for u in users %}
+            <div class="user-row">
+              <div>
+                <b>{{ u.username }}</b>
+                {% if u.first_name or u.last_name %}
+                  <span class="muted">{{ u.last_name }}{{ u.first_name }}</span>
+                {% endif %}
+              </div>
+              <a class="btn" href="{% url 'accounts:profile' u.username %}">프로필</a>
+            </div>
+          {% empty %}
+            <p class="muted">유저 검색 결과가 없어요.</p>
+          {% endfor %}
+        </div>
+
+      {% else %}
+        <div class="feed">
+          {% for post in posts %}
+            {# ✅ 너 기존 feed의 post 카드 블록을 그대로 여기 복붙하면 됨 #}
+            <div class="post-card">
+              <div><b>{{ post.author.username }}</b></div>
+              {% if post.image %}<img src="{{ post.image.url }}" style="width:100%;border-radius:12px;margin-top:8px;">{% endif %}
+              <div style="margin-top:8px;">{{ post.content }}</div>
+              <div class="muted" style="margin-top:6px;">
+                ❤ {{ post.like_count }} · 💬 {{ post.comment_count }}
+              </div>
+            </div>
+          {% empty %}
+            <p class="muted">게시글 검색 결과가 없어요.</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+    {% endif %}
+  </div>
+{% endblock %}

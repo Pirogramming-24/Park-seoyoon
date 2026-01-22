@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}New Story | Pirostagram{% endblock %}
+
+{% block content %}
+  <div class="panel">
+    <h2 class="panel-title">스토리 업로드</h2>
+
+    <!-- ✅ enctype 절대 필수 -->
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <div class="field">
+        <label>이미지 여러 장 선택</label>
+
+        <!-- ✅ form 필드 렌더 대신 input을 직접 박아버려서 name 확정 -->
+        <input type="file" name="images" multiple accept="image/*" required>
+
+        {% for err in form.images.errors %}
+          <p style="color:#ef4444; font-size:13px; margin:6px 0 0 0;">{{ err }}</p>
+        {% endfor %}
+      </div>
+
+      <div class="row">
+        <button class="btn primary" type="submit">업로드</button>
+        <a class="btn" href="{% url 'posts:feed' %}">취소</a>
+      </div>
+    </form>
+  </div>
+{% endblock %}

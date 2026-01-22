@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Delete Post | Pirostagram{% endblock %}
+
+{% block content %}
+  <div class="panel">
+    <h2 class="panel-title">게시글 삭제</h2>
+    <p>정말로 이 게시글을 삭제할까요? (되돌릴 수 없음)</p>
+
+    <form method="post" class="row">
+      {% csrf_token %}
+      <button class="btn danger" type="submit">삭제</button>
+      <a class="btn" href="{% url 'posts:feed' %}">취소</a>
+    </form>
+  </div>
+{% endblock %}
